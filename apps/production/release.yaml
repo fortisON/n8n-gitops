@@ -1,0 +1,54 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: n8n
+  namespace: production
+spec:
+  interval: 10m
+  timeout: 10m
+  releaseName: n8n
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  chart:
+    spec:
+      chart: ./charts/n8n
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  values:
+    image:
+      repository: n8nio/n8n
+      tag: "latest"
+    n8n:
+      host: n8n.local
+      protocol: https
+    database:
+      host: n8n-db-rw
+      name: n8n
+      existingSecret: n8n-db-app
+    ingress:
+      enabled: true
+      className: traefik
+      host: n8n.local
+      annotations:
+        cert-manager.io/cluster-issuer: selfsigned-issuer
+      tls:
+        enabled: true
+        secretName: n8n-prod-tls
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 70
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi

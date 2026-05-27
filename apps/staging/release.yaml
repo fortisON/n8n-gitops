@@ -1,0 +1,51 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: n8n
+  namespace: staging
+spec:
+  interval: 10m
+  timeout: 10m
+  releaseName: n8n
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  chart:
+    spec:
+      chart: ./charts/n8n
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  values:
+    replicaCount: 1
+    image:
+      repository: n8nio/n8n
+      tag: "latest"
+    n8n:
+      host: n8n.staging.local
+      protocol: https
+    database:
+      host: n8n-db-rw
+      name: n8n
+      existingSecret: n8n-db-app
+    ingress:
+      enabled: true
+      className: traefik
+      host: n8n.staging.local
+      annotations:
+        cert-manager.io/cluster-issuer: selfsigned-issuer
+      tls:
+        enabled: true
+        secretName: n8n-staging-tls
+    autoscaling:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 192Mi
+      limits:
+        memory: 512Mi

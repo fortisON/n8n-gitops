@@ -1,0 +1,8 @@
+n8n deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+Replicas:   {{ if .Values.autoscaling.enabled }}HPA {{ .Values.autoscaling.minReplicas }}-{{ .Values.autoscaling.maxReplicas }} (target CPU {{ .Values.autoscaling.targetCPUUtilizationPercentage }}%){{ else }}{{ .Values.replicaCount }} (fixed){{ end }}
+Database:   postgresql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}
+Image:      {{ .Values.image.repository }}:{{ .Values.image.tag }}
+{{- if .Values.ingress.enabled }}
+URL:        {{ .Values.n8n.protocol }}://{{ .Values.ingress.host }}/
+{{- end }}

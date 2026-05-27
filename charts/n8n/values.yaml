@@ -1,0 +1,76 @@
+replicaCount: 1
+
+image:
+  repository: n8nio/n8n
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+n8n:
+  host: n8n.local
+  protocol: https
+  port: 5678
+  encryptionKey:
+    existingSecret: n8n-secrets
+    key: encryption-key
+  extraEnv: []
+
+database:
+  host: n8n-db-rw
+  port: 5432
+  name: n8n
+  schema: public
+  sslEnabled: false
+  existingSecret: n8n-db-app
+  userKey: username
+  passwordKey: password
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5678
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations: {}
+  host: n8n.local
+  tls:
+    enabled: true
+    secretName: n8n-tls
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

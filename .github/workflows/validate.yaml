@@ -1,0 +1,41 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - run: helm lint charts/n8n
+      - run: helm template n8n charts/n8n
+      - run: |
+          helm template n8n charts/n8n \
+            --set autoscaling.enabled=true \
+            --set resources.requests.cpu=100m \
+            --set resources.requests.memory=256Mi
+
+  kustomize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kustomize + kubeconform
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+          sudo install -m 0755 kustomize /usr/local/bin/kustomize
+          curl -sSfL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz | tar xz
+          sudo install -m 0755 kubeconform /usr/local/bin/kubeconform
+      - name: Build & validate overlays
+        run: |
+          set -euo pipefail
+          for d in apps/staging apps/production infrastructure/controllers infrastructure/configs; do
+            echo "==> $d"
+            kustomize build "$d" | kubeconform -strict -ignore-missing-schemas \
+              -schema-location default \
+              -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}.json'
+          done

@@ -1,0 +1,7 @@
+.git/
+.gitignore
+*.tmproj
+.vscode/
+.idea/
+*.bak
+*.orig
