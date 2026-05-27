@@ -1,0 +1,284 @@
+fortis@legion:~/work/n8n-gitops$ git init -b main
+Initialized empty Git repository in /home/fortis/work/n8n-gitops/.git/
+fortis@legion:~/work/n8n-gitops$ git add -A
+fortis@legion:~/work/n8n-gitops$ git commit -m "n8n gitops"
+[main (root-commit) 60d5c87] n8n gitops
+ 31 files changed, 790 insertions(+)
+ create mode 100644 .github/workflows/validate.yaml
+ create mode 100644 .gitignore
+ create mode 100644 README.md
+ create mode 100644 apps/production/kustomization.yaml
+ create mode 100644 apps/production/n8n-encryption-secret.yaml
+ create mode 100644 apps/production/namespace.yaml
+ create mode 100644 apps/production/postgres.yaml
+ create mode 100644 apps/production/release.yaml
+ create mode 100644 apps/staging/kustomization.yaml
+ create mode 100644 apps/staging/n8n-encryption-secret.yaml
+ create mode 100644 apps/staging/namespace.yaml
+ create mode 100644 apps/staging/postgres.yaml
+ create mode 100644 apps/staging/release.yaml
+ create mode 100644 charts/n8n/.helmignore
+ create mode 100644 charts/n8n/Chart.yaml
+ create mode 100644 charts/n8n/templates/NOTES.txt
+ create mode 100644 charts/n8n/templates/_helpers.tpl
+ create mode 100644 charts/n8n/templates/deployment.yaml
+ create mode 100644 charts/n8n/templates/hpa.yaml
+ create mode 100644 charts/n8n/templates/ingress.yaml
+ create mode 100644 charts/n8n/templates/service.yaml
+ create mode 100644 charts/n8n/values.yaml
+ create mode 100644 clusters/my-cluster/apps-production.yaml
+ create mode 100644 clusters/my-cluster/apps-staging.yaml
+ create mode 100644 clusters/my-cluster/infra-configs.yaml
+ create mode 100644 clusters/my-cluster/infrastructure.yaml
+ create mode 100644 infrastructure/configs/cluster-issuer.yaml
+ create mode 100644 infrastructure/configs/kustomization.yaml
+ create mode 100644 infrastructure/controllers/cert-manager.yaml
+ create mode 100644 infrastructure/controllers/cloudnative-pg.yaml
+ create mode 100644 infrastructure/controllers/kustomization.yaml
+fortis@legion:~/work/n8n-gitops$ git remote add origin https://github.com/fortisON/n8n-gitops.git
+fortis@legion:~/work/n8n-gitops$ git push -u origin main
+Password for 'https://fortisON@github.com':
+Enumerating objects: 46, done.
+Counting objects: 100% (46/46), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (41/41), done.
+Writing objects: 100% (46/46), 9.70 KiB | 2.43 MiB/s, done.
+Total 46 (delta 6), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (6/6), done.
+To https://github.com/fortisON/n8n-gitops.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+fortis@legion:~/work/n8n-gitops$ export GITHUB_TOKEN=**************************************************
+fortis@legion:~/work/n8n-gitops$ flux bootstrap github --owner=fortisON --repository=n8n-gitops --branch=main --path=./clusters/my-cluster --personal
+► connecting to github.com
+► cloning branch "main" from Git repository "https://github.com/fortisON/n8n-gitops.git"
+✔ cloned repository
+► generating component manifests
+✔ generated component manifests
+✔ committed component manifests to "main" ("e10463de638b30c83fa342f4cd5dc14ea060b862")
+► pushing component manifests to "https://github.com/fortisON/n8n-gitops.git"
+► installing components in "flux-system" namespace
+✔ installed components
+✔ reconciled components
+► determining if source secret "flux-system/flux-system" exists
+► generating source secret
+✔ public key: ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBJ+YWn1seWteLKYSp5SgVFaY2Ts9pIdbXAAFMmeqWiSouYLUAYpjrCvXmVD8FBL+RTEwV/aAXNgS+MbEFrY0Im5DMVUTklzHWM+eAUiDQZEw+J0Rn27EKFQskfSGKXpHTg==
+✔ configured deploy key "flux-system-main-flux-system-./clusters/my-cluster" for "https://github.com/fortisON/n8n-gitops"
+► applying source secret "flux-system/flux-system"
+✔ reconciled source secret
+► generating sync manifests
+✔ generated sync manifests
+✔ committed sync manifests to "main" ("065046eccb5d746e65687737f1393397fa7bdd56")
+► pushing sync manifests to "https://github.com/fortisON/n8n-gitops.git"
+► applying sync manifests
+✔ reconciled sync configuration
+◎ waiting for GitRepository "flux-system/flux-system" to be reconciled
+✔ GitRepository reconciled successfully
+◎ waiting for Kustomization "flux-system/flux-system" to be reconciled
+✔ Kustomization reconciled successfully
+► confirming components are healthy
+✔ helm-controller: deployment ready
+✔ kustomize-controller: deployment ready
+✔ notification-controller: deployment ready
+✔ source-controller: deployment ready
+✔ all components are healthy
+fortis@legion:~/work/n8n-gitops$ git pull --rebase
+remote: Enumerating objects: 16, done.
+remote: Counting objects: 100% (16/16), done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 13 (delta 4), reused 9 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (13/13), 36.89 KiB | 786.00 KiB/s, done.
+From https://github.com/fortisON/n8n-gitops
+   60d5c87..065046e  main       -> origin/main
+Updating 60d5c87..065046e
+Fast-forward
+ clusters/my-cluster/flux-system/gotk-components.yaml | 6437 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ clusters/my-cluster/flux-system/gotk-sync.yaml       |   27 +
+ clusters/my-cluster/flux-system/kustomization.yaml   |    5 +
+ 3 files changed, 6469 insertions(+)
+ create mode 100644 clusters/my-cluster/flux-system/gotk-components.yaml
+ create mode 100644 clusters/my-cluster/flux-system/gotk-sync.yaml
+ create mode 100644 clusters/my-cluster/flux-system/kustomization.yaml
+fortis@legion:~/work/n8n-gitops$ flux get kustomizations -A --watch
+NAMESPACE       NAME            REVISION        SUSPENDED       READY   MESSAGE
+flux-system     apps-production                 False           False   dependency 'flux-system/infra-configs' is not ready
+flux-system     apps-staging            False   False   dependency 'flux-system/infra-configs' is not ready
+flux-system     flux-system     main@sha1:065046ec      False   True    Applied revision: main@sha1:065046ec
+flux-system     infra-configs           False   False   dependency 'flux-system/infra-controllers' is not ready
+flux-system     infra-controllers               False   Unknown Reconciliation in progress
+flux-system     infra-controllers               False   Unknown Reconciliation in progress
+flux-system     infra-controllers               False   True    Applied revision: main@sha1:065046ec
+flux-system     infra-controllers       main@sha1:065046ec      False   True    Applied revision: main@sha1:065046ec
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   Unknown Reconciliation in progress
+flux-system     infra-configs           False   True    Applied revision: main@sha1:065046ec
+flux-system     infra-configs   main@sha1:065046ec      False   True    Applied revision: main@sha1:065046ec
+flux-system     apps-production         False   Unknown Reconciliation in progress
+flux-system     apps-production         False   Unknown Reconciliation in progress
+flux-system     apps-production         False   Unknown Reconciliation in progress
+flux-system     apps-staging            False   Unknown Reconciliation in progress
+flux-system     apps-production         False   Unknown Reconciliation in progress
+flux-system     apps-staging            False   Unknown Reconciliation in progress
+flux-system     apps-staging            False   Unknown Reconciliation in progress
+flux-system     apps-production         False   True    Applied revision: main@sha1:065046ec
+flux-system     apps-production main@sha1:065046ec      False   True    Applied revision: main@sha1:065046ec
+flux-system     apps-staging            False   Unknown Reconciliation in progress
+flux-system     apps-staging            False   True    Applied revision: main@sha1:065046ec
+flux-system     apps-staging    main@sha1:065046ec      False   True    Applied revision: main@sha1:065046ec
+✗ timed out waiting for the condition
+fortis@legion:~/work/n8n-gitops$ flux get helmreleases -A
+NAMESPACE       NAME            REVISION        SUSPENDED       READY   MESSAGE
+flux-system     cert-manager    v1.20.2         False           True    Helm install succeeded for release cert-manager/cert-manager.v1 with chart cert-manager@v1.20.2
+flux-system     cloudnative-pg  0.28.2          False           True    Helm install succeeded for release cnpg-system/cloudnative-pg.v1 with chart cloudnative-pg@0.28.2
+production      n8n             0.1.0           False           Unknown Running 'install' action with timeout of 10m0s
+staging         n8n             0.1.0           False           True    Helm install succeeded for release staging/n8n.v1 with chart n8n@0.1.0
+fortis@legion:~/work/n8n-gitops$ git add apps/production/postgres.yaml
+fortis@legion:~/work/n8n-gitops$ git commit -m "fix"
+[main 9df5c0f] fix
+ 1 file changed, 4 insertions(+)
+fortis@legion:~/work/n8n-gitops$ git push
+Password for 'https://fortisON@github.com':
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 463 bytes | 463.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/fortisON/n8n-gitops.git
+   065046e..9df5c0f  main -> main
+fortis@legion:~/work/n8n-gitops$ flux reconcile kustomization apps-production --with-source
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:9df5c0f2272002312f88ad42ee45332bbdda45d7
+► annotating Kustomization apps-production in flux-system namespace
+✔ Kustomization annotated
+◎ waiting for Kustomization reconciliation
+✔ applied revision main@sha1:9df5c0f2272002312f88ad42ee45332bbdda45d7
+fortis@legion:~/work/n8n-gitops$ kubectl delete cluster.postgresql.cnpg.io n8n-db -n production
+cluster.postgresql.cnpg.io "n8n-db" deleted from production namespace
+fortis@legion:~/work/n8n-gitops$ flux reconcile kustomization apps-production --with-source
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:9df5c0f2272002312f88ad42ee45332bbdda45d7
+► annotating Kustomization apps-production in flux-system namespace
+✔ Kustomization annotated
+◎ waiting for Kustomization reconciliation
+✔ applied revision main@sha1:9df5c0f2272002312f88ad42ee45332bbdda45d7
+fortis@legion:~/work/n8n-gitops$ kubectl get cluster.postgresql.cnpg.io -n production -w
+NAME     AGE   INSTANCES   READY   STATUS                                       PRIMARY
+n8n-db   42s   2           1       Waiting for the instances to become active   n8n-db-1
+n8n-db   45s   2           1       Waiting for the instances to become active   n8n-db-1
+n8n-db   46s   2           1       Waiting for the instances to become active   n8n-db-1
+n8n-db   52s   2           2       Waiting for the instances to become active   n8n-db-1
+n8n-db   53s   2           2       Cluster in healthy state                     n8n-db-1
+n8n-db   53s   2           2       Cluster in healthy state                     n8n-db-1
+^Cfortis@legion:~/work/n8n-gitopskubectl rollout restart deploy n8n -n productionon
+deployment.apps/n8n restarted
+fortis@legion:~/work/n8n-gitops$ kubectl get pods -n production
+NAME                   READY   STATUS              RESTARTS      AGE
+n8n-6bcbb99cf5-29rq7   0/1     ContainerCreating   0             1s
+n8n-6bcbb99cf5-hdct2   1/1     Running             0             14s
+n8n-6bcbb99cf5-xtjlb   0/1     Running             0             6s
+n8n-86c69759b8-f5qwz   1/1     Running             1 (36s ago)   51s
+n8n-86c69759b8-lwckj   0/1     Error               0             6s
+n8n-86c69759b8-psdw6   1/1     Running             0             54s
+n8n-db-1               1/1     Running             0             66s
+n8n-db-2               1/1     Running             0             37s
+fortis@legion:~/work/n8n-gitops$ flux get helmreleases -A
+NAMESPACE       NAME            REVISION        SUSPENDED       READY   MESSAGE
+flux-system     cert-manager    v1.20.2         False           True    Helm install succeeded for release cert-manager/cert-manager.v1 with chart cert-manager@v1.20.2
+flux-system     cloudnative-pg  0.28.2          False           True    Helm install succeeded for release cnpg-system/cloudnative-pg.v1 with chart cloudnative-pg@0.28.2
+production      n8n             0.1.0           False           True    Helm install succeeded for release production/n8n.v1 with chart n8n@0.1.0
+staging         n8n             0.1.0           False           True    Helm install succeeded for release staging/n8n.v1 with chart n8n@0.1.0
+fortis@legion:~/work/n8n-gitops$ kubectl rollout status deploy/n8n -n production
+deployment "n8n" successfully rolled out
+fortis@legion:~/work/n8n-gitops$ flux get helmreleases -A
+NAMESPACE       NAME            REVISION        SUSPENDED       READY   MESSAGE
+flux-system     cert-manager    v1.20.2         False           True    Helm install succeeded for release cert-manager/cert-manager.v1 with chart cert-manager@v1.20.2
+flux-system     cloudnative-pg  0.28.2          False           True    Helm install succeeded for release cnpg-system/cloudnative-pg.v1 with chart cloudnative-pg@0.28.2
+production      n8n             0.1.0           False           True    Helm install succeeded for release production/n8n.v1 with chart n8n@0.1.0
+staging         n8n             0.1.0           False           True    Helm install succeeded for release staging/n8n.v1 with chart n8n@0.1.0
+fortis@legion:~/work/n8n-gitops$ flux get kustomizations -A
+NAMESPACE       NAME                    REVISION                SUSPENDED       READY   MESSAGE
+flux-system     apps-production         main@sha1:9df5c0f2      False           True    Applied revision: main@sha1:9df5c0f2
+flux-system     apps-staging            main@sha1:9df5c0f2      False           True    Applied revision: main@sha1:9df5c0f2
+flux-system     flux-system             main@sha1:9df5c0f2      False           True    Applied revision: main@sha1:9df5c0f2
+flux-system     infra-configs           main@sha1:9df5c0f2      False           True    Applied revision: main@sha1:9df5c0f2
+flux-system     infra-controllers       main@sha1:9df5c0f2      False           True    Applied revision: main@sha1:9df5c0f2
+fortis@legion:~/work/n8n-gitops$ kubectl get pods -A
+NAMESPACE                   NAME                                       READY   STATUS      RESTARTS         AGE
+cert-manager                cert-manager-56949cd87b-9c99d              1/1     Running     0                14m
+cert-manager                cert-manager-cainjector-74c7bcf57c-g8xpl   1/1     Running     0                14m
+cert-manager                cert-manager-webhook-69bdf957c6-w8nxj      1/1     Running     0                14m
+cnpg-system                 cloudnative-pg-77887754b5-ms9nd            1/1     Running     0                14m
+default                     course-app-5b7cf47b8d-brtt6                1/1     Running     9 (3h24m ago)    3d18h
+default                     course-app-5b7cf47b8d-swpbq                1/1     Running     9 (3h24m ago)    3d18h
+default                     dragonfly-0                                1/1     Running     8 (3h25m ago)    3d18h
+default                     dragonfly-1                                1/1     Running     4 (3h25m ago)    3d18h
+dragonfly-operator-system   dragonfly-operator-57bd9d885f-sbqpm        2/2     Running     11 (3h25m ago)   3d18h
+flux-system                 helm-controller-678fc574b-ftmm8            1/1     Running     0                15m
+flux-system                 kustomize-controller-54cd597856-5phs6      1/1     Running     0                15m
+flux-system                 notification-controller-57f99647f5-4nw5w   1/1     Running     0                15m
+flux-system                 source-controller-5f9c5996b6-zhpzz         1/1     Running     0                15m
+kube-system                 coredns-76c974cb66-btw6s                   1/1     Running     13 (3h25m ago)   42d
+kube-system                 helm-install-traefik-crd-rj56z             0/1     Completed   0                42d
+kube-system                 helm-install-traefik-wbzpt                 0/1     Completed   2                42d
+kube-system                 local-path-provisioner-8686667995-x227n    1/1     Running     8 (3h25m ago)    42d
+kube-system                 metrics-server-c8774f4f4-tkz4n             1/1     Running     12 (3h25m ago)   42d
+kube-system                 svclb-traefik-63ac15c4-k9449               2/2     Running     16 (3h25m ago)   42d
+kube-system                 traefik-c5c8bf4ff-kcftp                    1/1     Running     13 (3h25m ago)   42d
+production                  n8n-6bcbb99cf5-29rq7                       1/1     Running     0                2m55s
+production                  n8n-6bcbb99cf5-hdct2                       1/1     Running     0                3m8s
+production                  n8n-6bcbb99cf5-mr2pb                       1/1     Running     0                2m45s
+production                  n8n-6bcbb99cf5-tghjt                       1/1     Running     0                2m46s
+production                  n8n-6bcbb99cf5-xtjlb                       1/1     Running     0                3m
+production                  n8n-db-1                                   1/1     Running     0                4m
+production                  n8n-db-2                                   1/1     Running     0                3m31s
+staging                     n8n-5f4fb99db6-bqx8v                       1/1     Running     1 (13m ago)      14m
+staging                     n8n-db-1                                   1/1     Running     0                13m
+fortis@legion:~/work/n8n-gitops$ kubectl get ingress -A
+NAMESPACE    NAME         CLASS     HOSTS                              ADDRESS        PORTS     AGE
+default      course-app   traefik   course-app.192-168-5-15.sslip.io   192.168.5.15   80, 443   11d
+production   n8n          traefik   n8n.local                          192.168.5.15   80, 443   4m1s
+staging      n8n          traefik   n8n.staging.local                  192.168.5.15   80, 443   14m
+fortis@legion:~/work/n8n-gitops$ kubectl get hpa -n production
+NAME   REFERENCE        TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+n8n    Deployment/n8n   cpu: 2%/70%   2         5         5          4m12s
+fortis@legion:~/work/n8n-gitops$ kubectl get cluster.postgresql.cnpg.io -A
+NAMESPACE    NAME     AGE     INSTANCES   READY   STATUS                     PRIMARY
+production   n8n-db   4m43s   2           2       Cluster in healthy state   n8n-db-1
+staging      n8n-db   14m     1           1       Cluster in healthy state   n8n-db-1
+fortis@legion:~/work/n8n-gitops$ kubectl delete deploy n8n -n production
+deployment.apps "n8n" deleted from production namespace
+fortis@legion:~/work/n8n-gitops$ sleep 40
++fortis@legion:~/work/n8n-gitops$flux reconcile kustomization apps-productionn
+► annotating Kustomization apps-production in flux-system namespace
+✔ Kustomization annotated
+◎ waiting for Kustomization reconciliation
+✔ applied revision main@sha1:9df5c0f2272002312f88ad42ee45332bbdda45d7
+fortis@legion:~/work/n8n-gitops$ kubectl get deploy n8n -n production
+Error from server (NotFound): deployments.apps "n8n" not found
+fortis@legion:~/work/n8n-gitops$ kubectl get deploy n8n -n production
+Error from server (NotFound): deployments.apps "n8n" not found
+fortis@legion:~/work/n8n-gitops$ flux reconcile helmrelease n8n -n production --force
+► annotating HelmRelease n8n in production namespace
+✔ HelmRelease annotated
+◎ waiting for HelmRelease reconciliation
+✔ applied revision 0.1.0
+fortis@legion:~/work/n8n-gitops$ kubectl get deploy n8n -n production
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+n8n    2/2     2            2           37s
+fortis@legion:~/work/n8n-gitops$ kubectl get pods -n production
+NAME                   READY   STATUS    RESTARTS   AGE
+n8n-86c69759b8-p47dt   1/1     Running   0          45s
+n8n-86c69759b8-sr4jj   1/1     Running   0          42s
+n8n-db-1               1/1     Running   0          8m58s
+n8n-db-2               1/1     Running   0          8m29s
