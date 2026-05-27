@@ -7,6 +7,10 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 2Gi
+  bootstrap:
+    initdb:
+      database: n8n
+      owner: n8n
   postgresql:
     parameters:
       max_connections: "100"
